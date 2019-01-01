@@ -30,42 +30,45 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
 
-    var person = $(this).attr("data-person");
 
-    // Example queryURL for Giphy API
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + artists + "oWR0i53CGaKdmofnw3bWHMXCauhkGIk0";
 
     var artists = ["musician", "painter", "directors", "writers"];
 
-    $("button").on("click", function() {
+    function diplayArtistInfo() {
+
+        var person = $(this).attr("data-person");
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + artists + "oWR0i53CGaKdmofnw3bWHMXCauhkGIk0";
+
 
     $.ajax({
       url: queryURL,
       method: "GET"
     }).then(function(response) {
       console.log(response);
-
-          var results = response.data;
-
-          for (var i = 0; i < results.length; i++) {
-            var gifButton = $("<button>");
-            var gifDiv = $("<div>");
-            var rating = results[i].rating;
-
-            var gifImage = $("<img>");
-            gifImage.attr("src", results[i].images.fixed_height.url);
-
-            // gifDiv.prepend(p);
-            gifDiv.prepend(personImage);
-
-            $("#gifs-appear-here").prepend(gifDiv);
-
-
-
-    }
-    
+        
+        var gifDiv = $("<div>");
+        var rating = "Rated: " + response.Rating;
+        var ratingDisplay = gifDiv.html("<h3>" + Rating + "</h3>");
+        $("#artist-div").append(ratingDisplay);
+        
     });
-});
+};
+
+    function makeButtons(){
+
+        $("#buttons").empty();
+
+        for (var i = 0; i < results.length; i++) {
+            var gifButton = $("<button>");
+            gifButton.addClass("artist");
+            gifButton.attr("data-name", artists[i]);
+        
+        $("#buttons").append(gifButton)
+    
+    }
+    console.log(results)
+    }
   </script>
 
 </body>

@@ -7,10 +7,8 @@
 </head>
 
 <body>
-    <div id="buttons">
-        <button data-person="?">
-          ??
-    </button>
+    <div id="buttons"></div>
+          
             
 
     
@@ -20,11 +18,11 @@
         <input type="text" id="artist-input"><br>
         <input id="select-artist" type="submit" value="GO!">
 
+
+
       </form>
     
       <div id="artist-div"></div>
-
-      <div id="gifs-appear-here">
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -38,7 +36,7 @@
 
         var person = $(this).attr("data-person");
 
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + artists + "oWR0i53CGaKdmofnw3bWHMXCauhkGIk0";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?" + "api_key=oWR0i53CGaKdmofnw3bWHMXCauhkGIk0" + "q=" + person + "&limit=10&offset=0&lang=en";
 
 
     $.ajax({
@@ -46,29 +44,71 @@
       method: "GET"
     }).then(function(response) {
       console.log(response);
-        
-        var gifDiv = $("<div>");
-        var rating = "Rated: " + response.Rating;
-        var ratingDisplay = gifDiv.html("<h3>" + Rating + "</h3>");
-        $("#artist-div").append(ratingDisplay);
-        
+
+        var results = response.data;        
+
+
+
+        // var rating = "Rated: " + response.Rating;
+        // var ratingDisplay = gifDiv.html("<h3>" + Rating + "</h3>");
+        // $("#artist-div").append(ratingDisplay);
+
+        for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("<div>");                
+            var p = $("<p>");
+                p.addClass("rating");
+                    p.text("Rating: " + results[i].rating);
+
+            var gifImage = $("<img>");
+
+            gifImage.attr("src", results[i].images.fixed_height.url);
+            
+            gifDiv.append(p);
+
+            gifDiv.append(gifImage);
+
+            $("#artist-div").prepend(gifDiv);
+
+        }
+
+        function renderButtons() {
+
+            $("#buttons-view").empty();
+
+            for (var i = 0; i < artists.length; i++) {
+
+                var a = $("<button>");
+
+                a.addClass("artist-btn");
+
+                a.attr("data-name", artists[i]);
+
+                a.text(artists[i]);
+
+                $("buttons-view").append(a);
+            }
+        }
+
+        $("#select-artist").on("click", function(event) {
+            event.preventDefault();
+
+            var artistAdd = $("#artist-div").val().trim();
+
+            artists.push(artistAdd);
+
+            renderButtons();
+        });
+
+        $(document).on("click", ".artist-btn", displayArtistInfo)
+
+            renderButtons();
+
     });
 };
 
-    function makeButtons(){
-
-        $("#buttons").empty();
-
-        for (var i = 0; i < results.length; i++) {
-            var gifButton = $("<button>");
-            gifButton.addClass("artist");
-            gifButton.attr("data-name", artists[i]);
-        
-        $("#buttons").append(gifButton)
     
-    }
-    console.log(results)
-    }
+    
+    
   </script>
 
 </body>

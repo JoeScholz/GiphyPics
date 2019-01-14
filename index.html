@@ -2,41 +2,44 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Giphy API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
+    <meta charset="utf-8">
+    <title>Giphy API</title>
+
 </head>
 
 <body>
-    <div id="buttons"></div>
-          
-            
+    <h1>90s TV Gifs</h1>
+    <form id="show-form">
+        <label for="show-input">ADD A SHOW:</label><br>
+        <input type="text" id="show-input"><br>
+        </br>
+        <input id="select-show" type="submit" value="Submit">
+        <br>
+    </form>
 
-    
-  <form id="artist-form">
-
-        <label for="artist-input">Add an Artist</label>
-        <input type="text" id="artist-input"><br>
-        <input id="select-artist" type="submit" value="GO!">
-
-
-
-      </form>
-    
-      <div id="artist-div"></div>
-
+    <div class="container">
+        <div id="buttons-view">
+    </div>
+    <!-- Images dumped here-->
+      <div id="show-div"></div>
+    <!-- need t align images!!! -->
+    </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
 
+    $(document).ready(function () {
 
+    var shows = ["The Fresh Prince of Bel-Air", "Seinfeld", "Frasier", "Full House"
+            ];
 
-    var artists = ["musician", "painter", "directors", "writers"];
+    function displayShow() {
 
-    function diplayArtistInfo() {
-
-        var person = $(this).attr("data-person");
-
-        var queryURL = "https://api.giphy.com/v1/gifs/search?" + "api_key=oWR0i53CGaKdmofnw3bWHMXCauhkGIk0" + "q=" + person + "&limit=10&offset=0&lang=en";
+        var showAdd = $(this).attr("data-name");
+        var queryURL = "https://api.giphy.com/v1/gifs/search?" + "api_key=RzM124TnNwp4tVV1HHQgpTB9Xh5UEvay&q=" + showAdd + "&limit=10&offset=0&rating=PG-13&lang=en";
+        console.log(queryURL);
 
 
     $.ajax({
@@ -47,70 +50,71 @@
 
         var results = response.data;        
 
-
-
-        // var rating = "Rated: " + response.Rating;
-        // var ratingDisplay = gifDiv.html("<h3>" + Rating + "</h3>");
-        // $("#artist-div").append(ratingDisplay);
-
         for (var i = 0; i < results.length; i++) {
-            var gifDiv = $("<div>");                
+            if(i == 0 ) {
+                // Row Code Start
+            }
+            var gifDiv = $("<div class='gifDiv'>");                
+            
             var p = $("<p>");
                 p.addClass("rating");
-                    p.text("Rating: " + results[i].rating);
+                p.text("Rating: " + results[i].rating);
 
             var gifImage = $("<img>");
 
-            gifImage.attr("src", results[i].images.fixed_height.url);
-            
-            gifDiv.append(p);
+                gifImage.attr("src", results[i].images.fixed_height_still.url);
+                gifImage.attr("data-url", results[i].images.fixed_height.url);
+                gifImage.addClass("showGif");
 
-            gifDiv.append(gifImage);
+                gifDiv.append(p);
+                gifDiv.append(gifImage);
 
-            $("#artist-div").prepend(gifDiv);
+            $("#show-div").prepend(gifDiv);
 
-        }
+            }
+        });
+    };
 
         function renderButtons() {
 
             $("#buttons-view").empty();
 
-            for (var i = 0; i < artists.length; i++) {
+            for (var i = 0; i < shows.length; i++) {
 
-                var a = $("<button>");
+                var buttons = $("<button>");
 
-                a.addClass("artist-btn");
+                    buttons.addClass("show-btn");
+                    buttons.attr("data-name", shows[i]);
+                    buttons.text(shows[i]);
 
-                a.attr("data-name", artists[i]);
-
-                a.text(artists[i]);
-
-                $("buttons-view").append(a);
+                $("#buttons-view").append(buttons);
             }
         }
 
-        $("#select-artist").on("click", function(event) {
+        $("#select-show").on("click", function(event) {
             event.preventDefault();
 
-            var artistAdd = $("#artist-div").val().trim();
+            var showAdd = $("#show-input").val().trim();
 
-            artists.push(artistAdd);
+            shows.push(showAdd);
 
             renderButtons();
         });
 
-        $(document).on("click", ".artist-btn", displayArtistInfo)
+        $(document).on("click", ".show-btn", displayShow);
 
-            renderButtons();
+        renderButtons();
 
-    });
-};
-
-    
-    
+        $(document).on("click", ".showGif", function () {
+                var src = $(this).attr("src");
+                var url = $(this).attr("data-url");
+                $(this).attr("src", url);
+                $(this).attr("data-url", src);
+            })
+        })
     
   </script>
-
+    
 </body>
 
 </html>

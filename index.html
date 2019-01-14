@@ -12,11 +12,11 @@
 <body>
     <h1>90s TV Gifs</h1>
     <form id="show-form">
-        <label for="show-input">ADD A SHOW:</label><br>
-        <input type="text" id="show-input"><br>
-        </br>
-        <input id="select-show" type="submit" value="Submit">
+        <label for="show-input">ADD A SHOW:</label>
         <br>
+        <input type="text" id="show-input">
+        <br>
+        <input id="select-show" type="submit" value="Submit"><br>
     </form>
 
     <div class="container">
@@ -51,14 +51,12 @@
         var results = response.data;        
 
         for (var i = 0; i < results.length; i++) {
-            if(i == 0 ) {
-                // Row Code Start
-            }
+            
             var gifDiv = $("<div class='gifDiv'>");                
             
-            var p = $("<p>");
-                p.addClass("rating");
-                p.text("Rating: " + results[i].rating);
+            var rating = $("<p>");
+                rating.addClass("rating");
+                rating.text("Rating: " + results[i].rating);
 
             var gifImage = $("<img>");
 
@@ -66,8 +64,8 @@
                 gifImage.attr("data-url", results[i].images.fixed_height.url);
                 gifImage.addClass("showGif");
 
-                gifDiv.append(p);
                 gifDiv.append(gifImage);
+                gifDiv.append(rating);
 
             $("#show-div").prepend(gifDiv);
 
@@ -99,6 +97,11 @@
             shows.push(showAdd);
 
             renderButtons();
+
+        });
+
+        $("#select-show").click(function(){
+            $('input[type="text"]').val('');
         });
 
         $(document).on("click", ".show-btn", displayShow);
